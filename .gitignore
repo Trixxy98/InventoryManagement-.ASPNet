@@ -1,0 +1,41 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+.idea/
+
+# .NET
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+*.cache
+
+# SQLite (generated on first run)
+*.db
+*.db-shm
+*.db-wal
+
+# Node / React (Fasa 3)
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Logs & env
+logs/
+*.log
+.env
+.env.*
+!.env.example
+
+# Coverage / test
+coverage/
+TestResults/
