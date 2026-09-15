@@ -43,7 +43,7 @@ public class DashboardController : ControllerBase {
             .Select(p => new LowStockItemResponse {
                 Id = p.Id,
                 Name = p.Name,
-                Category = p.Category.Name,
+                CategoryName = p.Category.Name,
                 Quantity = p.Quantity,
                 MinimumStock = p.MinimumStock,
                 StockStatus = StockStatuses.From(p.Quantity, p.MinimumStock)
