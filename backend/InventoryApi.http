@@ -1,6 +1,33 @@
-@InventoryApi_HostAddress = http://localhost:5150
+@host = http://localhost:5150
 
-GET {{InventoryApi_HostAddress}}/weatherforecast/
-Accept: application/json
+### Dashboard
+GET {{host}}/api/dashboard
 
-###
+### Products
+GET {{host}}/api/products
+
+### Search
+GET {{host}}/api/products?search=mouse
+
+### Low stock
+GET {{host}}/api/products?stockStatus=low
+
+### Stock in
+POST {{host}}/api/stock/in
+Content-Type: application/json
+
+{
+  "productId": 2,
+  "quantity": 20,
+  "note": "Supplier delivery"
+}
+
+### Stock out — patut 400 (Wireless Mouse baki 8)
+POST {{host}}/api/stock/out
+Content-Type: application/json
+
+{
+  "productId": 2,
+  "quantity": 999,
+  "note": "Should fail"
+}

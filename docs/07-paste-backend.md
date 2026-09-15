@@ -9,13 +9,13 @@ Port sebenar anda: `http://localhost:5150` (bukan 5088).
 ## Status sekarang
 
 
-| Item | Ada? |
-|------|------|
-| `dotnet new webapi` | Ya |
-| EF Sqlite + Design | Ya |
-| WeatherForecast template | Sudah dibuang |
-| Models / DbContext / seed | Ya — Fasa 1 siap |
-| Controllers inventory | Belum — **Fasa 2 sekarang** |
+| Item                      | Ada?                        |
+| ------------------------- | --------------------------- |
+| `dotnet new webapi`       | Ya                          |
+| EF Sqlite + Design        | Ya                          |
+| WeatherForecast template  | Sudah dibuang               |
+| Models / DbContext / seed | Ya — Fasa 1 siap            |
+| Controllers inventory     | Belum — **Fasa 2 sekarang** |
 
 
 ---
