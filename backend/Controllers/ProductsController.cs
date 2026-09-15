@@ -36,7 +36,7 @@ public class ProductsController : ControllerBase {
             query = stockStatus.Trim().ToLower() switch {
                 "in" => query.Where(p => p.Quantity > p.MinimumStock),
                 "low" => query.Where(p => p.Quantity > 0 && p.Quantity <= p.MinimumStock),
-                "out" => query.Where(p => p.Quantity === 0),
+                "out" => query.Where(p => p.Quantity == 0),
                 _ => query
             };
         }

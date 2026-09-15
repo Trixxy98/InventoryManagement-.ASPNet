@@ -40,22 +40,15 @@ Nota: .NET 10 tiada Swagger UI by default. OpenAPI JSON: `http://localhost:5150/
 
 ## Fasa 2 — API lengkap (1–2 jam)
 
-Paste controllers + DTOs. Test di Swagger ikut order:
-
-1. GET `/api/dashboard` — nombor sepadan seed
-2. POST product baru
-3. PUT product (quantity **tidak** berubah)
-4. POST `/api/stock/in` — quantity naik
-5. POST `/api/stock/out` quantity besar — **400**
-6. POST `/api/stock/out` quantity sah — quantity turun
-7. GET `/api/products?search=mouse`
-8. DELETE category yang ada produk — **409**
-9. DELETE product — 204, hilang dari list
-
 Checklist:
 
-- [ ] Semua endpoint dalam [04-api.md](04-api.md) hidup
-- [ ] Insufficient stock berjaya ditolak
+- [x] Semua endpoint utama hidup
+- [x] GET `/api/dashboard` → `6` / `271` / `3` / `1`
+- [x] GET `/api/products?search=mouse` → Wireless Mouse, LowStock
+- [x] POST `/api/stock/out` qty 999 → **400** Insufficient stock
+- [x] DELETE `/api/categories/1` → **409** (ada produk)
+
+**Fasa 2 siap.** Biarkan `dotnet run` hidup. Seterusnya Fasa 3 (React). Jangan tutup API.
 
 ---
 

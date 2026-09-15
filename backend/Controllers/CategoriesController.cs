@@ -31,21 +31,6 @@ public class CategoriesController : ControllerBase {
         return Ok(items);
     }
 
-    [HttpGet("{id:int}")]
-    public async Task<ActionResult<CategoryResponse>> GetById(int id) {
-        var item = await _db.Categories
-            .Where(c => c.Name)
-            .Select(c => new categoryResponse {
-                Id = c.Id,
-                Name = c.Name,
-                Description = c.Description,
-                CreatedAt = c.CreatedAt,
-                ProductCount = c.Products.Count
-            })
-            .ToListAsync();
-
-        return Ok(items);
-    }
 
     [HttpGet("{id:int}")]
     public async Task<ActionResult<CategoryResponse>> GetById(int id) {
