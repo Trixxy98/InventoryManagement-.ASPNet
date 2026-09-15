@@ -18,8 +18,7 @@ Baca mengikut susunan:
 | 4 | [docs/04-api.md](docs/04-api.md) | Endpoints, JSON examples, validation |
 | 5 | [docs/05-ui.md](docs/05-ui.md) | Pages, wireframe, components, routes |
 | 6 | [docs/06-roadmap.md](docs/06-roadmap.md) | Fasa kerja + checklist (mula di sini bila nak code) |
-| 7 | [docs/07-paste-backend.md](docs/07-paste-backend.md) | Kod backend — paste manual |
-| 8 | [docs/08-paste-frontend.md](docs/08-paste-frontend.md) | Kod frontend — paste manual |
+
 
 ## Features (v1)
 
