@@ -49,7 +49,8 @@ protected override void OnModelCreating(ModelBuilder modelBuilder) {
         new Category {Id = 1, Name = "Electronics", Description = 
 "Gadgets and accessories", CreatedAt = created},
         new Category {Id = 2, Name = "Stationery", Description = "Paper and pens", CreatedAt = created},
-        new Category { Id = 3, Name = "Grocery", Description = "Daily essentials", CreatedAt = created }
+        new Category { Id = 3, Name = "Grocery", Description = "Daily essentials", CreatedAt = created },
+        new Category {Id = 4, Name = "Clothing", Description = "Tops", CreatedAt = created}
     );
 
     modelBuilder.Entity<Product>().HasData(
@@ -58,7 +59,8 @@ protected override void OnModelCreating(ModelBuilder modelBuilder) {
         new Product {Id = 3, Name = "A4 Paper Ream", CategoryId = 2, Price = 12.50m, Quantity = 0, MinimumStock = 5, CreatedAt = created},
         new Product {Id = 4, Name = "Blue Pen", CategoryId = 2, Price = 1.20m, Quantity = 200, MinimumStock = 50, CreatedAt = created},
         new Product {Id = 5, Name = "Instant Noodles", CategoryId = 3, Price = 2.50m, Quantity = 15, MinimumStock = 20, CreatedAt = created},
-        new Product {Id = 6, Name = "Bottled Water", CategoryId = 3, Price = 1.00m, Quantity = 3, MinimumStock = 12, CreatedAt = created}
+        new Product {Id = 6, Name = "Bottled Water", CategoryId = 3, Price = 1.00m, Quantity = 3, MinimumStock = 12, CreatedAt = created},
+        new Product {Id = 7, Name = "Black Polo Shirt", CategoryId = 4, Price = 1.00m, Quantity = 3, MinimumStock = 12, CreatedAt = created}
     );
 }
 }
