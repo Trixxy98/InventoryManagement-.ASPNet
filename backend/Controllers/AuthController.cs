@@ -64,4 +64,24 @@ public class AuthController : ControllerBase
             Username = user.Username
         });
     }
+
+        [AllowAnonymous]
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(RegisterRequest request)
+        {
+            var username = request.Username.Trim();
+            var exists = await _db.Users.AnyAsync(u => u.Username.ToLower() == username.ToLower());
+            if (exists)
+            {
+                return BadRequest(new { message = "Username already exists"});
+            }
+
+            var user = new User {Username = username};
+            user.PasswordHash = _hasher.HashPassword(user, request.Password);
+            _db.Users.Add(user);
+            await _db.SaveChangesAsync();
+
+            return Created("/api/auth/login", new {username = user.Username});
+        }
+    
 }
