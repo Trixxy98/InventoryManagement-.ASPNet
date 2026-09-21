@@ -1,11 +1,13 @@
 using InventoryApi.Data;
 using InventoryApi.DTOs;
 using InventoryApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace InventoryApi.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/stock")]
 public class StockController : ControllerBase {

@@ -45,17 +45,20 @@ function StockBadge({status}) {
 export default function Dashboard() {
     const [stats, setStats] = useState(null)
     const [attention, setAttention] = useState([])
+    const [movements, setMovements] = useState([])
     const [error, setError] = useState('')
 
     useEffect(() => {
         async function load() {
             try {
-                const [dash, low] = await Promise.all([
+                const [dash, low, move] = await Promise.all([
                     api.get('/dashboard'),
                     api.get('/dashboard/low-stock'),
+                    api.get('/dashboard/movements'),
                 ])
                 setStats(dash.data)
                 setAttention(low.data)
+                setMovements(move.data)
                 setError('')
             } catch (err) {
                 setError(getErrorMessage(err))
@@ -94,6 +97,40 @@ export default function Dashboard() {
                      value={stats.outOfStock}
                      hint="Empty"
                      accent="rose"/>
+                </div>
+            )}
+
+            {movements.length > 0 && (
+                <div className="mb-8 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <h2 className="mb-4 text-lg font-semibold">Stock movement (7 days)</h2>
+                    <div className="flex h-40 items-end gap-2">
+                        {movements.map((day) => {
+                            const max = Math.max(1, ...movements.map((d) => d.stockIn + d.stockOut))
+                            const inH = (day.stockIn / max) * 100
+                            const outH = (day.stockOut / max) * 100
+                            return (
+                                <div key={day.date} className="flex flex-1 flex-col items-center gap-1">
+                                    <div className="flex h-28 w-full items-end justify-center gap-0.5">
+                                        <div
+                                            className="w-3 rounded-t bg-emerald-500"
+                                            style={{height: `${inH}%`}}
+                                            title={`In ${day.stockIn}`}
+                                        />
+                                        <div
+                                            className="w-3 rounded-t bg-rose-400"
+                                            style={{height: `${outH}%`}}
+                                            title={`Out ${day.stockOut}`}
+                                        />
+                                    </div>
+                                    <span className="text-[10px] text-slate-500">{day.date.slice(5)}</span>
+                                </div>
+                            )
+                        })}
+                    </div>
+                    <p className="mt-2 text-xs text-slate-500">
+                        <span className="mr-3 text-emerald-600">■ In</span>
+                        <span className="text-rose-500">■ Out</span>
+                    </p>
                 </div>
             )}
 

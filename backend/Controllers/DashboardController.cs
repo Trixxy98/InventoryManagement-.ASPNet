@@ -1,11 +1,13 @@
 using InventoryApi.Data;
 using InventoryApi.DTOs;
 using InventoryApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace InventoryApi.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class DashboardController : ControllerBase {
@@ -50,5 +52,40 @@ public class DashboardController : ControllerBase {
             });
 
         return Ok(response);
+    }
+
+    [HttpGet("movements")]
+    public async Task<ActionResult<IEnumerable<StockMovementPoint>>> Movements([FromQuery] int days = 7)
+    {
+        days = Math.Clamp(days, 1, 31);
+        var start = DateTime.UtcNow.Date.AddDays(1 - days);
+
+        var rows = await _db.StockTransactions
+            .Where(t => t.CreatedAt >= start)
+            .ToListAsync();
+
+        var lookup = rows
+            .GroupBy(t => t.CreatedAt.Date)
+            .ToDictionary(
+                g => g.Key,
+                g => new
+                {
+                    StockIn = g.Where(t => t.Type == StockType.In).Sum(t => t.Quantity),
+                    StockOut = g.Where(t => t.Type == StockType.Out).Sum(t => t.Quantity)
+                });
+        var points = new List<StockMovementPoint>();
+        for (var i = 0; i < days; i++)
+        {
+            var day = start.AddDays(i);
+            lookup.TryGetValue(day, out var row);
+            points.Add(new StockMovementPoint
+            {
+                Date = day.ToString("yyyy-MM-dd"),
+                StockIn = row?.StockIn ?? 0,
+                StockOut = row?.StockOut ?? 0
+            });
+        }
+
+        return Ok(points);
     }
 }

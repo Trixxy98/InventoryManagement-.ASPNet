@@ -1,7 +1,27 @@
-import axios from 'axios';
+import axios from 'axios'
 
 const api = axios.create({
-    baseURL: 'http://localhost:5150/api',
+  baseURL: 'http://localhost:5150/api',
 })
+
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
+})
+
+api.interceptors.response.use(
+  (response) => response,
+  (err) => {
+    if (err.response?.status === 401 && !window.location.pathname.startsWith('/login')) {
+      localStorage.removeItem('token')
+      localStorage.removeItem('username')
+      window.location.href = '/login'
+    }
+    return Promise.reject(err)
+  }
+)
 
 export default api

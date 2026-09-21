@@ -15,3 +15,10 @@ public class LowStockItemResponse {
     public int MinimumStock {get; set;}
     public string StockStatus {get; set;} = string.Empty;
 }
+
+public class StockMovementPoint
+{
+    public string Date { get; set; } = string.Empty;
+    public int StockIn { get; set; }
+    public int StockOut { get; set; }
+}
