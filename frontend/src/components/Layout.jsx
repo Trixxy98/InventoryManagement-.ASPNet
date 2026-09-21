@@ -1,4 +1,5 @@
-import {NavLink, Outlet} from 'react-router-dom';
+import {NavLink, Outlet, useNavigate} from 'react-router-dom';
+import {useAuth} from '../auth';
 
 const links = [
     {to: '/', label: 'Dashboard', end: true},
@@ -12,6 +13,13 @@ function linkClass({isActive}) {
 }
 
 export default function Layout() {
+    const {username, logout} = useAuth()
+    const navigate = useNavigate()
+
+    function signOut() {
+        logout()
+        navigate('/login', {replace: true})
+    }
     return (
         <div className="min-h-screen bg-slate-50 text-slate-900">
             <div className="flex min-h-screen">
@@ -27,6 +35,12 @@ export default function Layout() {
                             </NavLink>
                         ))}
                     </nav>
+                    <div className="mt-auto px-3 pt-6 text-xs text-slate-400">
+                        <p className="mb-2">{username}</p>
+                        <button type="button" onClick={signOut} className="text-indigo-300 hover:text-white">
+                            Sign out
+                        </button>
+                    </div>
                 </aside>
 
                 <main className="flex-1 p-8">

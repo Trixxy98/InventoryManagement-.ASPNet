@@ -7,6 +7,7 @@ public static class ProductMapper {
         return new ProductResponse {
             Id = product.Id,
             Name = product.Name,
+            Sku = product.Sku,
             CategoryId = product.CategoryId,
             CategoryName = product.Category.Name,
             Price = product.Price,

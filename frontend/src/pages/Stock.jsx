@@ -20,8 +20,8 @@ export default function Stock() {
     const [saving, setSaving] = useState(false)
 
     async function loadProducts() {
-        const {data} = await api.get('/products')
-        setProducts(data)
+        const {data} = await api.get('/products', {params: {page: 1, pageSize: 100}})
+        setProducts(data.items ?? data)
     }
 
     async function loadHistory() {
