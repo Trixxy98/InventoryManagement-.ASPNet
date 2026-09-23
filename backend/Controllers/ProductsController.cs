@@ -146,6 +146,7 @@ public class ProductsController : ControllerBase {
         return Ok(ProductMapper.ToResponse(entity));
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
