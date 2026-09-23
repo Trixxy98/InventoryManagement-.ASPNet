@@ -53,7 +53,8 @@ public class AuthController : ControllerBase
             claims:
             [
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Username)
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Role, user.Role)
             ],
             expires: DateTime.UtcNow.AddMinutes(expiresMinutes),
             signingCredentials: creds);
@@ -61,7 +62,8 @@ public class AuthController : ControllerBase
         return Ok(new LoginResponse
         {
             Token = new JwtSecurityTokenHandler().WriteToken(token),
-            Username = user.Username
+            Username = user.Username,
+            Role = user.Role
         });
     }
 
@@ -76,7 +78,7 @@ public class AuthController : ControllerBase
                 return BadRequest(new { message = "Username already exists"});
             }
 
-            var user = new User {Username = username};
+            var user = new User {Username = username, Role = "Staff"};
             user.PasswordHash = _hasher.HashPassword(user, request.Password);
             _db.Users.Add(user);
             await _db.SaveChangesAsync();

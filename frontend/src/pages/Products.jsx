@@ -1,5 +1,8 @@
 import {useEffect, useState} from 'react';
 import api from '../api';
+import { useAuth } from '../auth';
+
+
 
 function getErrorMessage(err) {
     const data = err.response?.data
@@ -42,6 +45,7 @@ export default function Products() {
     const [editing, setEditing] = useState(null)
     const [form, setForm] = useState(emptyForm)
     const [saving, setSaving] = useState(false)
+    const {isAdmin} = useAuth()
 
     const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE))
 
@@ -243,9 +247,11 @@ export default function Products() {
                                     <button type="button" onClick={() => openEdit(item)} className="text-indigo-600 hover:underline">
                                         Edit
                                     </button>
-                                    <button type="button" onClick={() => remove(item)} className="text-rose-600 hover:underline">
+                                    {isAdmin && (
+                                        <button type="button" onClick={() => remove(item)} className="text-rose-600 hover:underline">
                                         Delete
-                                    </button>
+                                        </button>
+                                    )}
                                 </td>
                             </tr>
                         ))}

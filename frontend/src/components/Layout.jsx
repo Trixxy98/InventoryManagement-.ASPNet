@@ -13,7 +13,7 @@ function linkClass({isActive}) {
 }
 
 export default function Layout() {
-    const {username, logout} = useAuth()
+    const {username, role, logout} = useAuth()
     const navigate = useNavigate()
 
     function signOut() {
@@ -37,6 +37,7 @@ export default function Layout() {
                     </nav>
                     <div className="mt-auto px-3 pt-6 text-xs text-slate-400">
                         <p className="mb-2">{username}</p>
+                        <p className="mb-2 text-slate-500">{role}</p>
                         <button type="button" onClick={signOut} className="text-indigo-300 hover:text-white">
                             Sign out
                         </button>
