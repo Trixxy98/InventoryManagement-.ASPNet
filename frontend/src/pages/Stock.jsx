@@ -18,6 +18,10 @@ export default function Stock() {
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
     const [saving, setSaving] = useState(false)
+    const [page, setPage] = useState(1)
+    const [totalCount, setTotalCount] = useState(0)
+    const pageSize = 10
+    const totalPages = Math.max(1, Math.ceil(totalCount / pageSize))
 
     async function loadProducts() {
         const {data} = await api.get('/products', {params: {page: 1, pageSize: 100}})
@@ -25,10 +29,11 @@ export default function Stock() {
     }
 
     async function loadHistory() {
-        const params = {}
+        const params = {page, pageSize}
         if (filterProductId) params.productId = filterProductId
         const {data} = await api.get('/stock', {params})
-        setHistory(data)
+        setHistory(data.items ?? [])
+        setTotalCount(data.totalCount ?? 0)
     }
 
     async function load() {
@@ -40,9 +45,14 @@ export default function Stock() {
         }
     }
 
+
+    useEffect(() => {
+        setPage(1)
+    }, [filterProductId])
+
     useEffect(() => {
         load()
-    }, [filterProductId])
+    }, [filterProductId, page])
 
     async function submit(e) {
         e.preventDefault()
@@ -199,6 +209,26 @@ export default function Stock() {
                         ))}
                     </tbody>
                 </table>
+            </div>
+            <div className="mt-4 flex items-center justify-between text-sm text-slate-600">
+                <p>{totalCount} movemonts</p>
+                <div className="flex gap-2">
+                    <button
+                     type="button"
+                     disabled={page <= 1}
+                     onClick={() => setPage((p) => p - 1)}
+                     className="rounded-lg border border-slate-300 px-3 py-1 disabled:opacity-40">
+                        Previous
+                    </button>
+                    <span className="px-2 py-1">Page {page} / {totalPages}</span>
+                    <button
+                     type="button"
+                     disabled={page >= totalPages}
+                     onClick={() => setPage((p) => p + 1)}
+                     className="rounded-lg border border-slate-300 px-3 py-1 disabled:opacity-40">
+                        Next
+                    </button>
+                </div>
             </div>
         </div>
     )

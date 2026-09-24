@@ -46,6 +46,19 @@ public class ProductsController : ControllerBase {
         });
     }
 
+    [Authorize(Roles = "Admin")]
+    [HttpGet("deleted")]
+    public async Task<ActionResult<IEnumerable<ProductResponse>>> Deleted() {
+        var products = await _db.Products
+            .IgnoreQueryFilters()
+            .Include(p => p.Category)
+            .Where(p => p.IsDeleted)
+            .OrderBy(p => p.Name)
+            .ToListAsync();
+
+        return Ok(products.Select(ProductMapper.ToResponse));
+    }
+
     [HttpGet("export")]
     public async Task<IActionResult> Export(
         [FromQuery] string? search,
@@ -159,6 +172,24 @@ public class ProductsController : ControllerBase {
         entity.IsDeleted = true;
         await _db.SaveChangesAsync();
         return NoContent();
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost("{id:int}/restore")]
+    public async Task<ActionResult<ProductResponse>> Restore(int id) {
+        var entity = await _db.Products
+            .IgnoreQueryFilters()
+            .Include(p => p.Category)
+            .FirstOrDefaultAsync(p => p.Id == id && p.IsDeleted);
+
+        if (entity is null) {
+            return NotFound(new {message = "Deleted product not found"});
+        }
+
+        entity.IsDeleted = false;
+        await _db.SaveChangesAsync();
+
+        return Ok(ProductMapper.ToResponse(entity));
     }
 
     private static IQueryable<Product> ApplyFilters(

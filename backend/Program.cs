@@ -64,13 +64,13 @@ app.Run();
 
 static void SeedRuntimeData(AppDbContext db)
 {
-    if (!db.Users.Any())
-    {
-        var hasher = new PasswordHasher<User>();
-        var admin = new User { Username = "admin" , Role = "Admin"};
-        admin.PasswordHash = hasher.HashPassword(admin, "Admin123!");
-        db.Users.Add(admin);
-    }
+    // if (!db.Users.Any())
+    // {
+    //     var hasher = new PasswordHasher<User>();
+    //     var admin = new User { Username = "admin" , Role = "Admin"};
+    //     admin.PasswordHash = hasher.HashPassword(admin, "Admin123!");
+    //     db.Users.Add(admin);
+    // }
 
     if (!db.StockTransactions.Any())
     {

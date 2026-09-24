@@ -13,6 +13,8 @@ export function AuthProvider({ children }) {
       token,
       username,
       isAuthed: Boolean(token),
+      role, 
+      isAdmin: role === 'Admin',
       async login(user, password) {
         const { data } = await api.post('/auth/login', { username: user, password })
         localStorage.setItem('token', data.token)
@@ -31,7 +33,7 @@ export function AuthProvider({ children }) {
         setRole('')
       },
     }),
-    [token, username]
+    [token, username, role]
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

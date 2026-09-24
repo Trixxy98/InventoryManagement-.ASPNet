@@ -28,16 +28,27 @@ public class StockController : ControllerBase {
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<StockTransactionResponse>>> History([FromQuery] int? productId) {
+    public async Task<ActionResult<PagedResult<StockTransactionResponse>>> History(
+        [FromQuery] int? productId,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10
+    ) {
+        page = Math.Max(1, page);
+        pageSize = Math.Clamp(pageSize, 1, 100);
+
         var query = _db.StockTransactions.Include(t => t.Product).AsQueryable();
 
         if (productId is not null) {
             query = query.Where(t => t.ProductId == productId);
         }
 
+        var total = await query.CountAsync();
         var items = await query
             .OrderByDescending(t => t.CreatedAt)
-            .Select(t => new StockTransactionResponse {
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(t => new StockTransactionResponse
+            {
                 Id = t.Id,
                 ProductId = t.ProductId,
                 ProductName = t.Product.Name,
@@ -48,7 +59,13 @@ public class StockController : ControllerBase {
             })
             .ToListAsync();
 
-        return Ok(items);
+        return Ok(new PagedResult<StockTransactionResponse>
+        {
+            Items = items,
+            TotalCount = total,
+            Page = page,
+            PageSize = pageSize
+        });
     }
 
     private async Task<ActionResult<StockMoveResponse>> Move(StockMoveRequest request, StockType type) {
