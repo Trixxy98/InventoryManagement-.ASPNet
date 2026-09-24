@@ -46,6 +46,7 @@ export default function Products() {
     const [form, setForm] = useState(emptyForm)
     const [saving, setSaving] = useState(false)
     const {isAdmin} = useAuth()
+    const [deleted, setDeleted] = useState([])
 
     const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE))
 
@@ -64,7 +65,7 @@ export default function Products() {
             setTotalCount(data.totalCount ?? 0)
             setError('')
         } catch (err) {
-            setError(getErrorMessage(err))
+            setError(getErrorMessage(err))  
         }
     }
 
@@ -75,6 +76,10 @@ export default function Products() {
     useEffect(() => {
         load()
     }, [search, categoryId, stockStatus, page])
+
+    useEffect(() => {
+        loadDeleted()
+    }, [isAdmin])
 
     useEffect(() => {
         setPage(1)
@@ -129,6 +134,25 @@ export default function Products() {
         try {
             await api.delete(`/products/${item.id}`)
             await load()
+            await loadDeleted()
+        } catch (err) {
+            alert(getErrorMessage(err))
+        }
+    }
+
+    async function loadDeleted() {
+        if (!isAdmin) {
+            return
+        }
+        const {data} = await api.get('/products/deleted')
+        setDeleted(data)
+    }
+
+    async function restore(item) {
+        try {
+            await api.post(`/products/${item.id}/restore`)
+            await load()
+            await loadDeleted()
         } catch (err) {
             alert(getErrorMessage(err))
         }
@@ -281,6 +305,46 @@ export default function Products() {
                     </button>
                 </div>
             </div>
+
+            {isAdmin && (
+                <div className="mt-8">
+                    <h2 className="mb-3 text-lg font-semibold">Deleted</h2>
+                    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+                        <table className="w-full text-left text-sm">
+                            <thead className="bg-slate-50 text-slate-500">
+                                <tr>
+                                    <th className="px-4 py-3 font-medium">SKU</th>
+                                    <th className="px-4 py-3 font-medium">Name</th>
+                                    <th className="px-4 py-3 font-medium"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {deleted.length === 0 && (
+                                    <tr>
+                                        <td colSpan={3} className="px-4 py-8 text-center text-slate-500">
+                                            No deleted products found.
+                                        </td>
+                                    </tr>
+                                )}
+                                {deleted.map((item) => (
+                                    <tr>
+                                        <td className="px-4 py-3 font-mono text-xs">{item.sku}</td>
+                                        <td className="px-4 py-3">{item.name}</td>
+                                        <td className="px-4 py-3">
+                                            <button
+                                             type="button"
+                                             onClick={() => restore(item)}
+                                             className="text-indigo-600 hover:underline">
+                                                Restore
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            )}
 
             {open && (
                 <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/40 p-4">
